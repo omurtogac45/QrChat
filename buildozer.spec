@@ -23,6 +23,7 @@ icon.filename = icon.png
 
 # (list) Application requirements
 requirements = python3,kivy,qrcode
+version = 1.0
 
 # (str) Supported orientation (landscape, portrait or all)
 orientation = portrait
