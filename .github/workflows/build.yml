@@ -2,55 +2,48 @@ name: Build APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            openjdk-17-jdk \
-            unzip \
-            zip \
-            git \
-            python3-pip \
-            python3-setuptools \
-            python3-wheel \
-            python3-venv \
-            libncurses-dev \
-            libtinfo-dev \
-            pkg-config \
-            libffi-dev \
-            libssl-dev \
-            libsqlite3-dev \
-            zlib1g-dev
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          openjdk-17-jdk \
+          unzip \
+          zip \
+          git \
+          python3-pip \
+          python3-setuptools \
+          python3-wheel \
+          libncurses5 \
+          libstdc++6 \
+          libffi-dev \
+          libssl-dev \
+          build-essential \
+          pkg-config \
+          libsqlite3-dev
 
-      - name: Install Buildozer
-        run: |
-          pip install --upgrade pip
-          pip install buildozer==1.5.0 Cython==0.29.36
+        pip install --upgrade pip
+        pip install buildozer cython==0.29.36
 
-      - name: Build APK
-        run: |
-          buildozer android debug
+    - name: Build with Buildozer
+      run: |
+        buildozer android debug
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: qrchat-apk
-          path: bin/*.apk
-          retention-days: 7
-          if-no-files-found: error
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: qrchat-apk
+        path: bin/*.apk
